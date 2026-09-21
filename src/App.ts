@@ -8,17 +8,44 @@ import * as gfx from 'gophergfx'
 
 export class App extends gfx.GfxApp
 {
+    private ground: gfx.Mesh3;
+    private skyBox: gfx.Mesh3;
+    private sphere: gfx.Mesh3;
     // --- Create the App class ----
     constructor()
     {
         // initialize the base class gfx.GfxApp
         super();
+        this.ground = gfx.Geometry3Factory.createBox(50, 1, 50);
+        this.skyBox = gfx.Geometry3Factory.createBox(100, 100, 100);
+        this.sphere = gfx.Geometry3Factory.createSphere();
     }
 
 
     // --- Initialize the graphics scene ---
     createScene(): void 
     {
+        this.camera.setPerspectiveCamera(60, 1920/1080, 0.1, 100);
+        this.camera.position.set(0, 1.6, 0);
+
+        const ambientLight = new gfx.AmbientLight(new gfx.Color(0.4, 0.4, 0.4));
+        this.scene.add(ambientLight);
+
+        const directionalLight = new gfx.DirectionalLight(new gfx.Color(0.6, 0.6, 0.6));
+        directionalLight.position.set(-1,2,1);
+        this.scene.add(directionalLight);
+
+        this.scene.add(this.ground);
+        this.ground.position.set(0, -0.5, 0);
+        this.ground.material.setColor(new gfx.Color(83/255, 209/255, 110/255));
+
+        this.skyBox.material = new gfx.UnlitMaterial();
+        this.skyBox.material.side = gfx.Side.BACK;
+        this.skyBox.material.setColor(new gfx.Color(0.698, 1, 1));
+        this.scene.add(this.skyBox);
+
+        this.scene.add(this.sphere);
+        this.sphere.position.set(0,2,-10);
 
     }
 
